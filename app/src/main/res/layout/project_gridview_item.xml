@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/project_item_bg">
+    <ImageView
+            android:id="@+id/iv_project_pic_gridview_item"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/logo"/>
+    <TextView
+            android:id="@+id/tv_project_name_gridview_item"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textSize="20sp"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:gravity="center"
+            android:background="#445795"
+            android:textColor="#FFFFFF"
+            android:text="项目名称"/>
+</LinearLayout>
