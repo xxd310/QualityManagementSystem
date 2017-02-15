@@ -139,7 +139,8 @@ public class ImageDownloader {
      */
     private File downloadBitmap(PathUrl pu) {
         String fileName = pu.getLocal_url().substring(pu.getLocal_url().lastIndexOf("/"));
-//        // 图片命名方式
+//        String fileName = pu.getUrl().substring(pu.getUrl().lastIndexOf("/"));
+        // 图片命名方式
         final File cacheFile = new File(downloadPath + File.separator + fileName);
 
         HttpURLConnection urlConnection = null;

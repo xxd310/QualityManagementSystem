@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.zhihuitech.qualitymanagementsystem.R;
 import com.zhihuitech.qualitymanagementsystem.entity.Project;
 
@@ -62,8 +63,8 @@ public class ProjectListAdapter extends BaseAdapter {
 //        viewHolder.iv.setImageBitmap(BitmapFactory.decodeFile(project.getUrl()));
 //        Glide.with(context).load(new File(project.getUrl())).dontAnimate().into(viewHolder.iv);
         System.out.println("path=" + project.getLocal_url());
-//        Glide.with(context).load(new File(project.getLocal_url())).dontAnimate().into(viewHolder.iv);
-        viewHolder.iv.setImageBitmap(BitmapFactory.decodeFile(project.getLocal_url()));
+        Glide.with(context).load(new File(project.getLocal_url())).diskCacheStrategy(DiskCacheStrategy.NONE).dontAnimate().error(R.drawable.logo).into(viewHolder.iv);
+//        viewHolder.iv.setImageBitmap(BitmapFactory.decodeFile(project.getLocal_url()));
         return convertView;
     }
 

@@ -1,4 +1,4 @@
-CREATE TABLE qu_user (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,username varchar(255) NOT NULL,password varchar(255) NOT NULL,tel varchar(11) NOT NULL,group_id int(11) NOT NULL,project_id int(11) NOT NULL,remark varchar(255) DEFAULT NULL,code varchar(10));
+CREATE TABLE qu_user (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,username varchar(255) NOT NULL,password varchar(255) NOT NULL,tel varchar(11) NOT NULL,group_id int(11) NOT NULL,project_id int(11) NOT NULL,remark varchar(255) DEFAULT NULL,code varchar(10),is_del int(1) DEFAULT 0);
 CREATE TABLE qu_user_group (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,group_name varchar(255) NOT NULL);
 CREATE TABLE qu_project (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,project_name varchar(255) NOT NULL,url varchar(255) NOT NULL,description varchar(255),lasttime varchar(255) NOT NULL,local_url varchar(255));
 CREATE TABLE qu_area (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,area_name varchar(255) NOT NULL,project_id int(11) NOT NULL,description varchar(255),lasttime varchar(255) NOT NULL);

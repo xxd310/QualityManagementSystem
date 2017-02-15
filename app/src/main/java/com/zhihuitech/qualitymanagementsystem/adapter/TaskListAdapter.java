@@ -1,7 +1,6 @@
 package com.zhihuitech.qualitymanagementsystem.adapter;
 
 import android.content.Context;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.zhihuitech.qualitymanagementsystem.R;
 import com.zhihuitech.qualitymanagementsystem.entity.Task;
 
@@ -59,8 +59,9 @@ public class TaskListAdapter extends BaseAdapter {
         }
         Task task = (Task) getItem(position);
         viewHolder.tv.setText(task.getName());
-//        Glide.with(context).load(new File(task.getUrl())).dontAnimate().into(viewHolder.iv);
-        Glide.with(context).load(new File(task.getLocal_url())).dontAnimate().into(viewHolder.iv);
+        System.out.println("adapter=" + task.getLocal_url());
+//        viewHolder.iv.setImageBitmap(BitmapFactory.decodeFile(task.getLocal_url()));
+        Glide.with(context).load(new File(task.getLocal_url())).diskCacheStrategy(DiskCacheStrategy.NONE).dontAnimate().error(R.drawable.logo).into(viewHolder.iv);
         viewHolder.ivFinish.setVisibility(task.getFinish().equals("1") ? View.VISIBLE : View.GONE);
         return convertView;
     }

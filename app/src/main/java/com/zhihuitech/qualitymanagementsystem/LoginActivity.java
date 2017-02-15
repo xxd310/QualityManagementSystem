@@ -172,9 +172,9 @@ public class LoginActivity extends Activity {
                     else {
                         SQLiteDatabase db = dbHelper.getReadableDatabase();
                         try {
-                            Cursor cursor = db.rawQuery("select * from qu_user where username=? and password=?", new String[]{username, MD5.GetMD5Code(MD5.GetMD5Code(password))});
+                            Cursor cursor = db.rawQuery("select * from qu_user where username=? and password=? and is_del=0", new String[]{username, MD5.GetMD5Code(MD5.GetMD5Code(password))});
                             if(cursor.getCount() == 0) {
-                                cursor = db.rawQuery("select * from qu_user where tel=? and password=?", new String[]{username, MD5.GetMD5Code(MD5.GetMD5Code(password))});
+                                cursor = db.rawQuery("select * from qu_user where tel=? and password=? and is_del=0", new String[]{username, MD5.GetMD5Code(MD5.GetMD5Code(password))});
                             }
                             if(cursor.getCount() == 1) {
                                 while (cursor.moveToNext()) {
@@ -194,7 +194,7 @@ public class LoginActivity extends Activity {
                                 startActivity(intent);
                             } else {
                                 CustomViewUtil.dismissDialog();
-                                CustomViewUtil.createToast(LoginActivity.this, "用户名或密码错误！");
+                                CustomViewUtil.createToast(LoginActivity.this, "该用户不存在或用户名密码错误！");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -267,20 +267,28 @@ public class LoginActivity extends Activity {
                     if (resultObject.has("status") && !resultObject.isNull("status")) {
                         if (resultObject.getInt("status") == -1) {
                             CustomViewUtil.createToast(LoginActivity.this, "该用户不存在！");
-                            Cursor c = db.rawQuery("select * from qu_user where username=?", new String[]{username});
-                            if (c.getCount() == 0) {
-                                c = db.rawQuery("select * from qu_user where tel=?", new String[]{username});
-                                if (c.getCount() == 1) {
-                                    db.delete("qu_user", "tel=?", new String[]{username});
-                                }
-                            } else {
-                                db.delete("qu_user", "username=?", new String[]{username});
-                            }
+//                            Cursor c = db.rawQuery("select * from qu_user where username=?", new String[]{username});
+//                            if (c.getCount() == 0) {
+//                                c = db.rawQuery("select * from qu_user where tel=?", new String[]{username});
+//                                if (c.getCount() == 1) {
+//                                    db.delete("qu_user", "tel=?", new String[]{username});
+//                                }
+//                            } else {
+//                                db.delete("qu_user", "username=?", new String[]{username});
+//                            }
                         } else if (resultObject.getInt("status") == 0) {
                             CustomViewUtil.createToast(LoginActivity.this, resultObject.getString("info"));
                         } else if (resultObject.getInt("status") == 1) {
                             if (resultObject.has("user") && !resultObject.isNull("user")) {
                                 JSONObject userObject = resultObject.getJSONObject("user");
+                                if(userObject.getInt("is_del") == 1) {
+                                    ContentValues cv = new ContentValues();
+                                    cv.put("is_del", "1");
+                                    db.update("qu_user", cv, "tel=? or username=?", new String[]{username,username});
+                                    CustomViewUtil.createToast(LoginActivity.this, "该用户不存在！");
+                                    return;
+                                }
+
                                 Cursor userCursor = db.rawQuery("select * from qu_user where id=?", new String[]{userObject.getString("id")});
                                 ContentValues cv = new ContentValues();
                                 cv.put("id", userObject.getString("id"));

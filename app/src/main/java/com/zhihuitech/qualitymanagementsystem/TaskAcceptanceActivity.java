@@ -23,11 +23,11 @@ import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.zhihuitech.qualitymanagementsystem.adapter.RecordListAdapter;
 import com.zhihuitech.qualitymanagementsystem.entity.*;
 import com.zhihuitech.qualitymanagementsystem.util.CustomViewUtil;
 import com.zhihuitech.qualitymanagementsystem.util.PinchImageView;
-import com.zhihuitech.qualitymanagementsystem.util.XCRoundRectImageView;
 import com.zhihuitech.qualitymanagementsystem.util.database.DatabaseContext;
 import com.zhihuitech.qualitymanagementsystem.util.database.DatabaseHelper;
 import org.json.JSONArray;
@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
 
 public class TaskAcceptanceActivity extends Activity {
     private TextView tvUsername;
@@ -284,21 +285,26 @@ public class TaskAcceptanceActivity extends Activity {
         initDots();
         for(int i = 0; i < acceptStandardList.size(); i++) {
             final int index = i;
-            XCRoundRectImageView iv = new XCRoundRectImageView(this);
+            ImageView iv = new ImageView(this);
+//            XCRoundRectImageView iv = new XCRoundRectImageView(this);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             iv.setLayoutParams(layoutParams);
             iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            Bitmap bm = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/QualityManagement/Resource" + acceptStandardList.get(i).getLocal_url().substring(acceptStandardList.get(i).getLocal_url().lastIndexOf("/")));
-            if(bm == null) {
-                iv.setImageResource(R.drawable.logo);
-            } else {
-                iv.setImageBitmap(bm);
-            }
+//            Bitmap bm = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/QualityManagement/Resource" + acceptStandardList.get(i).getLocal_url().substring(acceptStandardList.get(i).getLocal_url().lastIndexOf("/")));
+//            if(bm == null) {
+//                iv.setImageResource(R.drawable.logo);
+//            } else {
+//                iv.setImageBitmap(bm);
+//            }
+            System.out.println("taskacceptance=" + Environment.getExternalStorageDirectory().getAbsolutePath() + "/QualityManagement/Resource" + acceptStandardList.get(i).getLocal_url().substring(acceptStandardList.get(i).getLocal_url().lastIndexOf("/")));
+//            iv.setImageBitmap(BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/QualityManagement/Resource" + acceptStandardList.get(i).getLocal_url().substring(acceptStandardList.get(i).getLocal_url().lastIndexOf("/"))));
+            Glide.with(this).load(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/QualityManagement/Resource" + acceptStandardList.get(i).getLocal_url().substring(acceptStandardList.get(i).getLocal_url().lastIndexOf("/")))).diskCacheStrategy(DiskCacheStrategy.NONE).dontAnimate().into(iv);
             viewList.add(iv);
             iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    System.out.println("index=" + index);
                     showBigPicDialog(acceptStandardList.get(index).getLocal_url());
                 }
             });
@@ -346,7 +352,7 @@ public class TaskAcceptanceActivity extends Activity {
         dialog.getWindow().setLayout((int) (0.8 * screenWidth), (int) (0.8 * screenHeight));
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         PinchImageView piv = (PinchImageView) view.findViewById(R.id.iv_big_pic_dialog);
-        Glide.with(this).load(new File(url)).dontAnimate().into(piv);
+        Glide.with(this).load(new File(url)).diskCacheStrategy(DiskCacheStrategy.NONE).dontAnimate().error(R.drawable.logo).into(piv);
         piv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -356,6 +362,7 @@ public class TaskAcceptanceActivity extends Activity {
     }
 
     private void showBigPicDialog(String url) {
+        System.out.println("url="+ url);
         final AlertDialog.Builder builder = new AlertDialog.Builder(TaskAcceptanceActivity.this);
         View view = LayoutInflater.from(this).inflate(R.layout.big_pic_dialog, null);
         final AlertDialog dialog = builder.create();
@@ -364,8 +371,8 @@ public class TaskAcceptanceActivity extends Activity {
         dialog.getWindow().setLayout((int) (0.8 * screenWidth), (int) (0.8 * screenHeight));
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         PinchImageView piv = (PinchImageView) view.findViewById(R.id.iv_big_pic_dialog);
-//        Glide.with(this).load(new File(url)).dontAnimate().into(piv);
-        Glide.with(this).load(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/QualityManagement/Resource" + url.substring(url.lastIndexOf("/")))).dontAnimate().into(piv);
+        Glide.with(this).load(new File(url)).diskCacheStrategy(DiskCacheStrategy.NONE).dontAnimate().error(R.drawable.logo).into(piv);
+//        Glide.with(this).load(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/QualityManagement/Resource" + url.substring(url.lastIndexOf("/")))).dontAnimate().into(piv);
         piv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -666,7 +673,7 @@ public class TaskAcceptanceActivity extends Activity {
                     return;
                 }
                 // 如果用户尚未输入验收说明，提示用户
-                if(etAcceptanceInstruction.getText().toString().equals("")) {
+                if(etAcceptanceInstruction.getText().toString().trim().equals("")) {
                     CustomViewUtil.createToast(TaskAcceptanceActivity.this, "请输入验收说明！");
                     return;
                 }
